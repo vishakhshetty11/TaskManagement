@@ -2,14 +2,13 @@ const taskModel = require("../Models/taskModel");
 
 async function createTask(req, res) {
   try {
-    const { title, description, status, priority, due_date } = req.body;
-    if (!title || !description || !status || !priority || !due_date) {
+    const { title, description, priority, due_date } = req.body;
+    if (!title || !description || !priority || !due_date) {
       return res.status(400).json({ message: "All fields are required" });
     }
     const taskModelObject = new taskModel({
       title,
       description,
-      status,
       priority,
       due_date,
       user_id: req.user.id,
@@ -93,17 +92,47 @@ async function updateTask(req, res) {
     });
   }
 }
+async function updateTaskStatus(req, res) {
+  try {
+    console.log("hi")
+    const taskId = req.params.taskid;
 
+    const task = await taskModel.findOne({
+      _id: taskId,
+      user_id: req.user.id,
+    });
+
+    if (!task) {
+      return res.status(404).json({
+        message: "Task not found",
+      });
+    }
+    console.log("before", task)
+    task.status = task.status === "completed" ? "pending" : "completed";
+    console.log("after", task)
+
+    await task.save();
+
+    res.status(200).json({
+      message: "Status updated successfully",
+      data: task,
+    });
+  } catch (err) {
+    res.status(500).json({
+      message: "Error updating status",
+      error: err.message,
+    });
+  }
+}
 async function deleteTask(req, res) {
   try {
     const taskId = req.params.taskid;
 
     // Find and delete task
-    const deletedTask =
-      await taskModel.findOneAndDelete({
-        _id: taskId,
-        user_id: req.user.id,
-      });
+    const deletedTask = await taskModel.findOneAndDelete({
+      _id: taskId,
+      user_id: req.user.id,
+    });
 
     // Task not found
     if (!deletedTask) {
@@ -124,4 +153,11 @@ async function deleteTask(req, res) {
   }
 }
 
-module.exports = { createTask, getAllTasks, getSingleTask, updateTask, deleteTask };
+module.exports = {
+  createTask,
+  getAllTasks,
+  getSingleTask,
+  updateTask,
+  updateTaskStatus,
+  deleteTask,
+};

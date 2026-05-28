@@ -7,7 +7,7 @@ const taskRouter = require('./Router/taskRouter')
 require("dotenv").config();
 server.use(express.json());
 server.use(cors({
-  origin: "http://localhost:5174",
+  origin: "http://localhost:5173",
   credentials: true,
 }));
 
