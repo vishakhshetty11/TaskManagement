@@ -22,7 +22,7 @@ const Dashboard = () => {
   const [open, setOpen] = useState(false);
   const [selectedTask, setSelectedTask] = useState(null);
   const [search, setSearch] = useState("");
-  
+
   const [loading, setLoading] = useState(false);
   const [filters, setFilters] = useState({
     priority: "",
@@ -60,10 +60,10 @@ const Dashboard = () => {
     (page - 1) * tasksPerPage,
     page * tasksPerPage
   );
-  const fetchTasks = async () => {    
+  const fetchTasks = async () => {
     setLoading(true);
     const res = await getAllTasks();
-    setTasks(res.data.data);   
+    setTasks(res.data.data);
     setLoading(false);
   };
 
@@ -233,48 +233,63 @@ const Dashboard = () => {
         </Box>
 
         {/* TASK GRID */}
-        <Grid container spacing={2}>
-          {paginatedTasks.length > 0 ? paginatedTasks.map((task) => (
-            <Grid size={{ xs: 12, sm: 6, md: 4, lg: 4 }} key={task._id}>
-              <TaskCard
-                task={task}
-                onDelete={handleDelete}
-                onEdit={handleEdit}
-                onStatusChange={handleStatusChange}
+        {
+          loading ? (
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                mt: 5,
+              }}
+            >
+              <CircularProgress />
+            </Box>
+          ) : (
+            <>
+              <Grid container spacing={2}>
+                {paginatedTasks.length > 0 ? paginatedTasks.map((task) => (
+                  <Grid size={{ xs: 12, sm: 6, md: 4, lg: 4 }} key={task._id}>
+                    <TaskCard
+                      task={task}
+                      onDelete={handleDelete}
+                      onEdit={handleEdit}
+                      onStatusChange={handleStatusChange}
+                    />
+                  </Grid>
+                )) :
+                  (
+                    <Typography sx={{ textAlign: "center", width: "100%", color: "red" }}>No Tasks Found!!</Typography>
+                  )
+                }
+              </Grid>
+              {/* PAGINATION */}
+              {paginatedTasks.length > 0 &&
+                <Box
+                  sx={{
+                    display: "flex",
+                    mt: 4,
+                    mb: 2,
+                  }}
+                >
+                  <Pagination
+                    count={totalPages}
+                    page={page}
+                    onChange={(e, value) =>
+                      setPage(value)
+                    }
+                    color="primary"
+                    shape="rounded"
+                  />
+                </Box>}
+              {/* MODAL FORM */}
+              <TaskForm
+                open={open}
+                setOpen={setOpen}
+                refresh={fetchTasks}
+                selectedTask={selectedTask}
               />
-            </Grid>
-          )) :
-            (
-              <Typography sx={{ textAlign: "center", width: "100%", color: "red" }}>No Tasks Found!!</Typography>
-            )
-          }
-        </Grid>
-        {/* PAGINATION */}
-        <Box
-          sx={{
-            display: "flex",
-            mt: 4,
-            mb: 2,
-          }}
-        >
-          <Pagination
-            count={totalPages}
-            page={page}
-            onChange={(e, value) =>
-              setPage(value)
-            }
-            color="primary"
-            shape="rounded"
-          />
-        </Box>
-        {/* MODAL FORM */}
-        <TaskForm
-          open={open}
-          setOpen={setOpen}
-          refresh={fetchTasks}
-          selectedTask={selectedTask}
-        />
-
+            </>
+          )}
       </Container>
     </>
   );
