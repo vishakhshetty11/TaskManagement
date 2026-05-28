@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
-
+import CircularProgress from "@mui/material/CircularProgress";
 import {
   Container,
   TextField,
@@ -14,6 +14,7 @@ import {
 import { toast } from "react-toastify";
 
 const Login = () => {
+  const [loading, setLoading] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
 
@@ -45,13 +46,16 @@ const Login = () => {
 
   const handleLogin = async () => {
     if (!validate()) return;
-
+    setLoading(true);
     try {
       await login(form);
       toast.success("Login Successful");
       navigate("/");
     } catch (err) {
       toast.error(err.response?.data?.message || "Invalid Credential");
+    }
+    finally {
+      setLoading(false);
     }
   };
 
@@ -118,7 +122,12 @@ const Login = () => {
           onClick={handleLogin}
           sx={{ mt: 2, py: 1.2 }}
         >
-          Login
+          {
+            loading
+              ? <CircularProgress size={24} color="inherit" />
+              : "Login"
+          }
+
         </Button>
 
         {/* SIGNUP LINK */}
