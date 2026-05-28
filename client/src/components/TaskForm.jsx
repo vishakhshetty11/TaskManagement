@@ -53,7 +53,7 @@ const TaskForm = ({
   // SUBMIT
   const handleSubmit = async () => {
     try {
-
+      const a = 1;
       // UPDATE
       if (selectedTask) {
         console.log(selectedTask._id, form)
