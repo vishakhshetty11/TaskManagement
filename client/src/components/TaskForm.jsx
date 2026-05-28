@@ -2,6 +2,7 @@ import { TextField, Grid, MenuItem, Button, Box, Dialog, DialogTitle, DialogCont
 import { useState, useEffect } from "react";
 import { createTask, updateTask } from "../services/taskService";
 
+import CircularProgress from "@mui/material/CircularProgress";
 import { toast } from "react-toastify";
 
 const TaskForm = ({
@@ -10,6 +11,8 @@ const TaskForm = ({
   refresh,
   selectedTask,
 }) => {
+
+  const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({
     title: "",
     priority: "",
@@ -20,7 +23,7 @@ const TaskForm = ({
   // PREFILL FORM ON EDIT
   useEffect(() => {
     if (selectedTask) {
-      
+
       setForm({
         title: selectedTask.title || "",
         priority: selectedTask.priority || "",
@@ -53,7 +56,8 @@ const TaskForm = ({
   // SUBMIT
   const handleSubmit = async () => {
     try {
-      const a = 1;
+
+      setLoading(true);
       // UPDATE
       if (selectedTask) {
         console.log(selectedTask._id, form)
@@ -82,8 +86,12 @@ const TaskForm = ({
       });
 
     } catch (err) {
-      
+
       toast.error(err.response?.data?.message || "Something went wrong");
+    }
+    finally {
+
+      setLoading(false);
     }
   };
 
@@ -183,7 +191,16 @@ const TaskForm = ({
             variant="contained"
             onClick={handleSubmit}
           >
-            {selectedTask ? "Update Task" : "Create Task"}
+            {
+              loading ? (
+                <CircularProgress size={24} color="inherit" />
+              ) : selectedTask ? (
+                "Update Task"
+              ) : (
+                "Create Task"
+              )
+            }
+
           </Button>
         </Box>
 

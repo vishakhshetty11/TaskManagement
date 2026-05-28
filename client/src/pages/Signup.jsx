@@ -13,7 +13,9 @@ import {
 
 import { toast } from "react-toastify";
 
+import CircularProgress from "@mui/material/CircularProgress";
 const Signup = () => {
+  const [loading, setLoading] = useState(false);
   const { signup } = useAuth();
   const navigate = useNavigate();
 
@@ -70,6 +72,7 @@ const Signup = () => {
   const handleSubmit = async () => {
     if (!validate()) return;
 
+    setLoading(true);
     try {
       await signup(form);
       toast.success("Signup successful");
@@ -79,6 +82,9 @@ const Signup = () => {
     } catch (err) {
       console.log(err)
       toast.error(err.response?.data?.message || "Signup failed");
+    }
+    finally {
+      setLoading(false);
     }
   };
 
@@ -110,7 +116,7 @@ const Signup = () => {
         {/* GRID FORM */}
         <Grid container spacing={1}>
           {/* First Name */}
-          <Grid size={{ xs: 12, sm: 6}}>
+          <Grid size={{ xs: 12, sm: 6 }}>
             <TextField
               fullWidth
               sx={{ width: "100%" }}
@@ -124,7 +130,7 @@ const Signup = () => {
           </Grid>
 
           {/* Last Name */}
-          <Grid size={{ xs: 12, sm: 6}}>
+          <Grid size={{ xs: 12, sm: 6 }}>
             <TextField
               fullWidth
               label="Last Name"
@@ -137,7 +143,7 @@ const Signup = () => {
           </Grid>
 
           {/* Email */}
-          <Grid size={{ xs: 12, sm: 6}}>
+          <Grid size={{ xs: 12, sm: 6 }}>
             <TextField
               fullWidth
               label="Email"
@@ -150,7 +156,7 @@ const Signup = () => {
           </Grid>
 
           {/* Mobile */}
-          <Grid size={{ xs: 12, sm: 6}}>
+          <Grid size={{ xs: 12, sm: 6 }}>
             <TextField
               fullWidth
               label="Mobile"
@@ -184,7 +190,12 @@ const Signup = () => {
           sx={{ mt: 3, py: 1.2 }}
           onClick={handleSubmit}
         >
-          Signup
+          {
+            loading
+              ? <CircularProgress size={24} color="inherit" />
+              : "Signup"
+          }
+
         </Button>
 
         {/* LOGIN LINK */}
