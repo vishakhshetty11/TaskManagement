@@ -8,12 +8,12 @@ import {
   MenuItem,
   Button,
 } from "@mui/material";
-
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
 const Navbar = () => {
   const { user, logout } = useAuth();
-
+const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState(null);
 
   const handleOpen = (event) => {
@@ -27,6 +27,7 @@ const Navbar = () => {
   const handleLogout = () => {
     logout();
     handleClose();
+    navigate("/login");
   };
 
   // 🔥 CONCAT FIRST + LAST NAME
