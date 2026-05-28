@@ -1,5 +1,5 @@
 import { createContext, useContext, useState } from "react";
-import API from "../api/axios";
+import API from "../api/api";
 
 const AuthContext = createContext();
 
@@ -7,14 +7,17 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
 
   const login = async (data) => {
-    const res = await API.post("/auth/login", data);
+    const res = await API.post("/user/login", data);
     localStorage.setItem("token", res.data.token);
     setUser(res.data.user);
     return res;
   };
 
   const signup = async (data) => {
-    return API.post("/auth/signup", data);
+    const res = await API.post("/user/signup", data);
+    localStorage.setItem("token", res.data.token);
+    setUser(res.data.user);
+    return res;
   };
 
   const logout = () => {

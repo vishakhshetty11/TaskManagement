@@ -1,10 +1,15 @@
 const express = require("express");
 const mongoose = require("mongoose");
+const cors = require("cors");
 const server = express();
 const userRouter = require('./Router/userRouter')
 const taskRouter = require('./Router/taskRouter')
 require("dotenv").config();
 server.use(express.json());
+server.use(cors({
+  origin: "http://localhost:5174",
+  credentials: true,
+}));
 
 
 server.use("/api/v1/user/", userRouter);
