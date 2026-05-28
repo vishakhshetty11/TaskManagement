@@ -16,11 +16,14 @@ import { updateTaskStatus } from "../services/taskService";
 import { getAllTasks, deleteTask } from "../services/taskService";
 import { toast } from "react-toastify";
 
+import CircularProgress from "@mui/material/CircularProgress";
 const Dashboard = () => {
   const [tasks, setTasks] = useState([]);
   const [open, setOpen] = useState(false);
   const [selectedTask, setSelectedTask] = useState(null);
   const [search, setSearch] = useState("");
+  
+  const [loading, setLoading] = useState(false);
   const [filters, setFilters] = useState({
     priority: "",
     status: "",
@@ -57,9 +60,11 @@ const Dashboard = () => {
     (page - 1) * tasksPerPage,
     page * tasksPerPage
   );
-  const fetchTasks = async () => {
+  const fetchTasks = async () => {    
+    setLoading(true);
     const res = await getAllTasks();
-    setTasks(res.data.data);
+    setTasks(res.data.data);   
+    setLoading(false);
   };
 
   useEffect(() => {
