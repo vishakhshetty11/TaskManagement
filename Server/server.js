@@ -17,7 +17,7 @@ server.use("/api/v1/user/", userRouter);
 server.use("/api/v1/tasks/", taskRouter);
 
 mongoose
-  .connect(`${process.env.url}/${process.env.database}`)
+  .connect(process.env.MONGO_URI)
   .then(() => {
     console.log("Connected to the database");
     server.listen(process.env.port, () => {
