@@ -10,7 +10,7 @@ server.use(
   cors({
     origin: [
       "http://localhost:5173", 
-      "https://your-frontend-app-name.onrender.com", 
+      "https://task-management-bay-phi.vercel.app", 
     ],
     credentials: true,
   }),
